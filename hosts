@@ -9,4 +9,5 @@ promisc="false"
 forgesrc="true"
 macchange="true"
 write="false"
+ndvs_name="NVDS-02"§
 edge_name=192.168.201.33
