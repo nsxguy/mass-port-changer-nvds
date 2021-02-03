@@ -1,0 +1,12 @@
+[esxi]
+192.168.201.11   ansible_user=root
+192.168.201.12   ansible_user=root
+192.168.201.13   ansible_user=root
+192.168.201.14   ansible_user=root
+
+[esxi:vars]
+promisc="false"
+forgesrc="true"
+macchange="true"
+write="false"
+edge_name=192.168.201.33
