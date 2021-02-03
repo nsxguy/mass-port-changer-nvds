@@ -25,17 +25,17 @@ How to use it.
 
 1) Change configuration in "hosts" file:
 [esxi]
-192.168.201.11   ansible_user=root
-192.168.201.12   ansible_user=root
-192.168.201.13   ansible_user=root
-192.168.201.14   ansible_user=root
+192.168.201.11   ansible_user=root     ### esxi host ###
+192.168.201.12   ansible_user=root     ### esxi host ###
+192.168.201.13   ansible_user=root     ### esxi host ###
+192.168.201.14   ansible_user=root     ### esxi host ###
 
 [esxi:vars]
 promisc="false"
 forgesrc="true"
 macchange="true"
 write="false"
-edge_name=192.168.201.33
+edge_name=192.168.201.33              ### part of VM-name, can use in extra-vars ###
 
 2) execute next command:
   2a) read current configuration.
