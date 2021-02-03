@@ -38,9 +38,9 @@ write="false"
 edge_name=192.168.201.33              ### part of VM-name, can use in extra-vars ###
 
 2) execute next command:
-  2a) read current configuration.
-     ansible-playbook check.yml -i hosts
-  2b) change configuration on ports.
-     ansible-playbook check.yml -i hosts --extra-vars "write=true"
-  2c) change configuration on ports without using default values.
-     ansible-playbook check.yml -i hosts --extra-vars "write=true macchange=true promisc=false forgesrc=false"
+2a) read current configuration.
+    ansible-playbook check.yml -i hosts
+2b) change configuration on ports.
+    ansible-playbook check.yml -i hosts --extra-vars "write=true"
+2c) change configuration on ports without using default values.
+    ansible-playbook check.yml -i hosts --extra-vars "write=true macchange=true promisc=false forgesrc=false"
