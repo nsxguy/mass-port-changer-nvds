@@ -1,0 +1,61 @@
+- hosts: esxi
+  gather_facts: no
+  vars: 
+    promisc_var: ""
+    forgesrc_var: ""
+    macchange_var: ""
+  tasks:
+    - name: read promisc state from config
+      set_fact:
+         promisc_var: "--promisc"
+      when: promisc=="true"
+
+    - name: read forgesrc state from config
+      set_fact:
+         forgesrc_var: "--forge-src"
+      when: forgesrc=="true"
+
+    - name: read macchange state from config
+      set_fact:
+         macchange_var: "--mac-change"
+      when: macchange=="true"
+
+    - name: search_edge-node
+      shell:  'nsxdp-cli vswitch instance list | egrep "{{ edge_name }}" | cut -d " " -f 3-4,23' 
+      register: vm_id
+
+    - name: print_edge-node
+      debug: 
+         msg: "{{ hostvars[inventory_hostname]['vm_id'].stdout_lines }}"
+      when: hostvars[inventory_hostname]['vm_id'].stdout != ""
+      ignore_errors: True
+      no_log: False
+
+    - name: search port_id
+      shell:  'nsxdp-cli vswitch instance list | egrep "{{ edge_name }}" | cut -d " " -f 23-23' 
+      register: port_id
+
+    - name: change_port_configuration
+      shell:  "nsxdp-cli vswitch l2sec set {{ promisc_var }} {{ forgesrc_var }} {{ macchange_var }} -p {{  item }} -dvs NVDS-02"
+      when: hostvars[inventory_hostname]['port_id'].stdout != "" and write=="true"
+      ignore_errors: True
+      with_items:
+        - "{{ hostvars[inventory_hostname]['port_id'].stdout_lines }}"
+
+    - name: read_port_configuration
+      shell:  "nsxdp-cli vswitch l2sec get -p {{  item }} -dvs NVDS-02"
+      when: hostvars[inventory_hostname]['port_id'].stdout != "" 
+      register: port_state
+      ignore_errors: True
+      with_items:
+        - "{{ hostvars[inventory_hostname]['port_id'].stdout_lines }}"
+
+    - name: print_port_state
+      debug: 
+         msg: "{{ item.stdout_lines }}"
+      when: hostvars[inventory_hostname]['port_id'].stdout != ""
+      loop: "{{ hostvars[inventory_hostname]['port_state'].results }}"
+      loop_control:
+         label: '{{ item.item }}'
+      ignore_errors: True
+      no_log: False
