@@ -36,11 +36,13 @@
       register: port_id
 
     - name: change_port_configuration
-      shell:  "nsxdp-cli vswitch l2sec set {{ promisc_var }} {{ forgesrc_var }} {{ macchange_var }} -p {{  item }} -dvs NVDS-02"
+      shell:  "nsxdp-cli vswitch l2sec set {{ promisc_var }} {{ forgesrc_var }} {{ macchange_var }} -p {{  item }} -dvs {{ ndvs_name }}"
       when: hostvars[inventory_hostname]['port_id'].stdout != "" and write=="true"
       ignore_errors: True
       with_items:
         - "{{ hostvars[inventory_hostname]['port_id'].stdout_lines }}"
+      register: command_result
+      failed_when: "'DVS Failure' in command_result.stdout"
 
     - name: read_port_configuration
       shell:  "nsxdp-cli vswitch l2sec get -p {{  item }} -dvs NVDS-02"
