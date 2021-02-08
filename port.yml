@@ -21,7 +21,7 @@
       when: macchange=="true"
 
     - name: search_edge-node
-      shell:  'nsxdp-cli vswitch instance list | egrep "{{ edge_name }}" | cut -d " " -f 3-4,23' 
+      shell:  'nsxdp-cli vswitch instance list | egrep "{{ edge_name }}" | sed -e "s/  */ /g" | cut -d " " -f 2,4' 
       register: vm_id
 
     - name: print_edge-node
@@ -32,7 +32,7 @@
       no_log: False
 
     - name: search port_id
-      shell:  'nsxdp-cli vswitch instance list | egrep "{{ edge_name }}" | cut -d " " -f 23-23' 
+      shell:  'nsxdp-cli vswitch instance list | egrep "{{ edge_name }}" | sed -e "s/  */ /g" | cut -d " " -f 4-4' 
       register: port_id
 
     - name: change_port_configuration
